@@ -1,0 +1,131 @@
+---
+import { site_content as site_content } from '~/content/constants.ts';
+import FeaturedText from '~/components/widgets/FeaturedText.astro';
+import Features3 from '~/components/widgets/Features3.astro';
+import Hero from '~/components/widgets/Hero3.astro';
+import Steps2 from '~/components/widgets/Steps2.astro';
+import Layout from '~/layouts/PageLayout.astro';
+
+import Brands from '~/components/widgets/Brands.astro';
+import Testimonials from '~/components/widgets/TestimonialsBanner.astro';
+import imgReference from '~/assets/images/fabrica.jpg';
+
+const image = {
+  src: imgReference,
+  alt: 'industrial-image',
+};
+
+const metadata = {
+  title: 'Quienes somos',
+};
+
+const testimonials_list = site_content.testimonials.map((item) => {
+  return {
+      name: item.author,
+      testimonial: item.quote,
+      company: item.company,
+      year: item.year,
+      job: item.position
+    }
+});
+
+---
+
+<Layout metadata={metadata}>
+  <!-- Hero Widget ******************* -->
+
+  <Hero
+    tagline=""
+    image={image}
+  >
+    <Fragment slot="title">
+    Quienes somos
+    </Fragment>
+
+    <Fragment slot="subtitle">
+    Conoce al equipo detrás de XDYNAMIS y nuestra misión de potenciar las PYMES
+    </Fragment>
+  </Hero>
+  
+  <!-- Features3 Widget ************** -->
+
+  <FeaturedText
+    title="Nuestra historia"
+    subtitle="XDYNAMIS es una consultora que desde el 2006 facilita soluciones de Formulación, Gestión de Proyectos y Capacitación para las pequeñas, medianas y grandes empresas. XDYNAMIS le propone crecer juntos, invirtiendo en el potencial de sus recursos y de su personal, encontrando dentro de las posibilidades de soluciones detectadas. Generamos alianzas a través de nuestra Red CB XDYNAMIS de Contactos."
+    isBeforeContent={true}
+  >
+    <Fragment slot="bg">
+      <div class="absolute inset-0 bg-blue-50 dark:bg-transparent"></div>
+    </Fragment>
+  </FeaturedText>
+
+
+  <Steps2
+    title='Paola Di Buccio, directora'
+    subtitle='"Mi formación profesional me permite dirigir y coordinar el equipo para analizar el momento de su empresa y establecer sus necesidades. Una vez obtenido el diagnóstico, le ofrecemos la mejor cartera de cursos de capacitación disponibles en el mercado."'
+    isReversed={true}
+    items={[
+      {
+        title: 'Global reach',
+        description: 'Conformada por profesionales que conocen tanto la administración empresarial y sus finanzas como la producción y comercialización de productos, XDYNAMIS analiza su empresa valorando todas sus áreas y recursos; concentrandose en potenciar y ayudar a las PYMES a través de la implementación de distintas herramientas y programas',
+        icon: 'tabler:globe',
+      },
+      {
+        title: 'Positive customer feedback and reviews',
+        description:
+          'Los RRHH son el activo más valioso que una empresa eficiente tiene hoy en día. Cuanto más desarrolle las habilidades de su gente, más efectiva y eficiente será su organización. Acérquese y/o contactenos y lo asesoraremos para que su empresa aumente el valor y la calidad de su gestión.',
+        icon: 'tabler:message-star',
+      },
+    ]}
+  />
+
+
+  <Features3
+    title='Capacitaciones y Consultorías'
+    columns={4}
+    isAfterContent={true}
+    items={[
+      {
+        title: 'Sistemas',
+        description:
+          'IA, gestión de calidad.',
+        icon: 'tabler:template',
+      },
+      {
+        title: 'Idiomas',
+        description:
+          'Ingles, Francés, Chino, Portugués',
+        icon: 'tabler:template',
+      },
+      {
+        title: 'Negocios y ventas',
+        description:
+          'Marketing, finanzas, mejora en técnicas de ventas, planes de negocio y comercio exterior.',
+        icon: 'tabler:template',
+      },
+      {
+        title: 'Gestión de equipos',
+        description:
+          'Resolución de problemas, administración del tiempo, liderazgo, trabajo en equipo.',
+        icon: 'tabler:template',
+      },
+    ]}
+  />
+
+  <Brands
+    title="Nuestros clientes"
+    subtitle=""
+    icons={[]}
+    images={site_content.client_logos}
+  />
+
+  <Testimonials
+    title="Testimonios"
+    subtitle="Lo que nuestros clientes dicen sobre nosotros"
+    testimonials={testimonials_list}
+  >
+    <Fragment slot="bg">
+      <div class="absolute inset-0 bg-blue-50 dark:bg-transparent"></div>
+    </Fragment>
+  </Testimonials>
+</Layout>

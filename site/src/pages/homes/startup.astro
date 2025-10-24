@@ -1,0 +1,155 @@
+---
+import { site_content as site_content } from '~/content/constants.ts';
+import Layout from '~/layouts/PageLayout.astro';
+
+import Hero from '~/components/widgets/Hero.astro';
+
+import Testimonials from '~/components/widgets/TestimonialsBanner.astro';
+import Features from '~/components/widgets/Features.astro';
+import FeaturedText from '~/components/widgets/FeaturedText.astro';
+import Steps2 from '~/components/widgets/Steps2.astro';
+import Brands from '~/components/widgets/Brands.astro';
+
+import imgReference from '~/assets/images/fabrica.jpg';
+
+const metadata = {
+  title: site_content.name
+};
+
+const testimonials_list = site_content.testimonials.map((item) => {
+  return {
+      name: item.author,
+      testimonial: item.quote,
+      company: item.company,
+      year: item.year,
+      job: item.position
+    }
+});
+---
+
+<Layout metadata={metadata}>
+  <Hero
+    tagline="XDYNAMIS"
+    image={{
+      src: imgReference,
+      alt: 'industrial-image',
+    }}
+    actions={[
+      {
+        variant: 'primary',
+        target: '_blank',
+        text: 'Nuestros servicios',
+        href: '#servicios',
+        icon: 'tabler:download',
+      },
+      { text: 'Nuestros equipo', href: '/quienes-somos' },
+    ]}
+  >
+    <Fragment slot="title">
+      Potencia tu <span
+        class="text-accent dark:text-white">PYME</span> 
+    </Fragment>
+
+    <Fragment slot="subtitle">
+      Desde el 2006 facilita la Formulación y Gestión de Proyectos, Subsidios y Capacitación para las pequeñas y medianas empresas Argentinas.
+    </Fragment>
+  </Hero>
+
+  <FeaturedText
+    title="¿Qué hacemos?"
+    subtitle="XDYNAMIS es una consultora que desde el 2006 facilita soluciones de Formulación, Gestión de Proyectos y Capacitación para las pequeñas, medianas y grandes empresas. XDYNAMIS le propone crecer juntos, invirtiendo en el potencial de sus recursos y de su personal, encontrando dentro de las posibilidades de soluciones detectadas. Generamos alianzas a través de nuestra Red CB XDYNAMISde Contactos."
+  >
+    <Fragment slot="bg">
+      <div class="absolute inset-0 bg-blue-50 dark:bg-transparent"></div>
+    </Fragment>
+  </FeaturedText>
+
+  <Features
+    id="servicios"
+    title="Capacitaciones y Consultorías"
+    subtitle="Los RRHH son el activo más valioso que una empresa eficiente tiene hoy en día. Cuanto más desarrolle las habilidades de su gente, más efectiva y eficiente será su organización. Acérquese y/o contactenos y lo asesoraremos para que su empresa aumente el valor y la calidad de su gestión."
+    columns={2}
+    items={[
+      {
+        title: 'Sistemas',
+        description:
+          'IA, gestión de calidad.',
+        icon: 'tabler:artboard',
+      },
+      {
+        title: 'Idiomas',
+        description: 'Inglés, Francés, Chino, Portugués',
+        icon: 'tabler:picture-in-picture',
+      },
+      {
+        title: 'Negocios y ventas',
+        description:
+          'Marketing, finanzas, mejora en técnicas de ventas, planes de negocio y comercio exterior.',
+        icon: 'tabler:adjustments-horizontal',
+      },
+      {
+        title: 'Gestión de equipos',
+        description: 'Resolución de problemas, administración del tiempo, liderazgo, trabajo en equipo.',
+        icon: 'tabler:rocket',
+      },
+    ]}
+  />
+
+  <Steps2
+    title="Alianzas"
+    subtitle="En XDYNAMIS sabemos que la unión hace a la fuerza, junto a los mejores profesionales, a las Organizaciones, Cámaras, y Fundaciones, juntos trabajamos para Usted. Nuestras alianzas nos permiten llegar a todo el país, coordinando desde Buenos Aires las mejores soluciones a las problemáticas planteadas."
+    isReversed={false}
+    items={[
+      {
+        description: 'Organizaciones',
+        icon: 'tabler:globe',
+      },
+      {
+        description: 'Cámaras',
+        icon: 'tabler:message-star',
+      },
+      {
+        description: 'Consultoras',
+        icon: 'tabler:award',
+      },
+      {
+        description: 'Universidades',
+        icon: 'tabler:award',
+      },
+    ]}
+  />
+
+  <Steps2
+    title="Formulación"
+    subtitle="Desarrollo de estrategias pasando por la revisión de valores, visión y misión de la empresa."
+    isReversed={true}
+    items={[
+      {
+        description: 'Diagnóstico de necesidades, FODA.',
+        icon: 'tabler:globe',
+      },
+      {
+        description: 'Presentación ante las entidades del programa solicitado.',
+        icon: 'tabler:message-star',
+      },
+    ]}
+  />
+
+
+  <Brands
+    title="Nuestros clientes"
+    subtitle=""
+    icons={[]}
+    images={site_content.client_logos}
+  />
+
+  <Testimonials
+    title="Testimonios"
+    subtitle="Lo que nuestros clientes dicen sobre nosotros"
+    testimonials={testimonials_list}
+  >
+    <Fragment slot="bg">
+      <div class="absolute inset-0 bg-blue-50 dark:bg-transparent"></div>
+    </Fragment>
+  </Testimonials>
+</Layout>

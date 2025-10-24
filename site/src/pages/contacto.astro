@@ -1,0 +1,77 @@
+---
+import { site_content as site_content } from '~/content/constants.ts';
+import Layout from '~/layouts/PageLayout.astro';
+import HeroText from '~/components/widgets/HeroText.astro';
+import ContactUs from '~/components/widgets/Contact.astro';
+import Brands from '~/components/widgets/Brands.astro';
+import Testimonials from '~/components/widgets/TestimonialsBanner.astro';
+
+const metadata = {
+  title: 'Contact',
+};
+
+const testimonials_list = site_content.testimonials.map((item) => {
+  return {
+      name: item.author,
+      testimonial: item.quote,
+      company: item.company,
+      year: item.year,
+      job: item.position
+    }
+});
+---
+
+<Layout metadata={metadata}>
+  <!-- HeroText Widget ******************* -->
+
+  <HeroText title="Contacto" />
+
+  <ContactUs
+    id="form"
+    title="Dejanos tu consulta"
+    subtitle="Uno de nuestros asesores se comunicara contigo a la menor brevedad."
+    inputs={[
+      {
+        type: 'text',
+        name: 'nombre',
+        label: 'Nombre',
+      },
+      {
+        type: 'email',
+        name: 'email',
+        label: 'Email',
+        required: true,
+      },
+      {
+        type: 'text',
+        name: 'asunto',
+        label: 'Asunto',
+      },
+    ]}
+    textarea={{
+      label: 'Message',
+    }}
+    disclaimer={{
+      label:
+        'Al enviar este formulario de contacto, aceptás la recolección de tus datos personales.',
+    }}
+    button="Enviar"
+  />
+
+  <Brands
+    title="Nuestros clientes"
+    subtitle=""
+    icons={[]}
+    images={site_content.client_logos}
+  />
+
+  <Testimonials
+    title="Testimonios"
+    subtitle="Lo que nuestros clientes dicen sobre nosotros"
+    testimonials={testimonials_list}
+  >
+    <Fragment slot="bg">
+      <div class="absolute inset-0 bg-blue-50 dark:bg-transparent"></div>
+    </Fragment>
+  </Testimonials>
+</Layout>
