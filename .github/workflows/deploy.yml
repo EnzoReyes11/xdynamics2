@@ -4,18 +4,20 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
 
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: ./site
-    permissions:
-      contents: read
-      pages: write
-      id-token: write
-
+    
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -24,7 +26,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - uses: pnpm/action-setup@v3
+      
+      - name: Install pnpm
+        uses: pnpm/action-setup@v3
         with:
           version: 10
 
@@ -33,15 +37,22 @@ jobs:
 
       - name: Build the Astro site
         run: pnpm run build
-
-      - name: Set up GitHub Pages
-        uses: actions/configure-pages@v4
+        env:
+          NODE_ENV: production
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: ./site/dist
 
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    
+    steps:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
