@@ -1,9 +1,16 @@
+import main_logo from "~/assets/images/xdynamis-logo-crop.png";
+import hero_image from "~/assets/images/fabrica.jpg";
+
 export const site_content = {
   name: "XDYNAMIS",
   tagline: "POTENCIA TU PYME",
   description: "Potencia tu PYME con capacitaciones y consultorías empresariales",
-  logo: "~/assets/images/xdynamis-logo-crop.png",
-  hero_image: "~/assets/images/fabrica.png",
+  logo: {...main_logo, alt: "XDYNAMIS Logo"},
+  hero_image: {
+    ...hero_image,
+    alt: "fabrica"
+
+  },
   
   // Contact information
   contact: {

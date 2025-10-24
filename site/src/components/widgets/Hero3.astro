@@ -16,11 +16,11 @@ const {
 } = Astro.props;
 ---
 
-<section class="relative md:-mt-[76px] not-prose" {...id ? { id } : {}} >
+<section class="relative not-prose" {...id ? { id } : {}} >
   <div class="absolute inset-0 -z-10">
   {image && (
     <div
-      style={`background-image: url("${image.src.src}")`}
+      style={`background-image: url("${image.src}")`}
       class="absolute inset-0 bg-cover bg-center bg-no-repeat"
     />
   )}
