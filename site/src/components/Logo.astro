@@ -1,8 +1,7 @@
 ---
-import { SITE } from 'astrowind:config';
 import { site_content } from '~/content/constants'
 import Image from './common/Image.astro';
 ---
 
   <Image src={site_content.logo} alt={site_content.logo.alt}></Image>
-  <span class="ml-2 rtl:ml-0 rtl:mr-2 text-2xl md:text-xl font-bold text-gray-900 whitespace-nowrap dark:text-white">{SITE?.name}</span>
+  <span class="ml-2 rtl:ml-0 rtl:mr-2 text-2xl md:text-xl font-bold text-gray-900 whitespace-nowrap dark:text-white">{site_content?.name}</span>
