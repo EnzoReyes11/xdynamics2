@@ -10,6 +10,7 @@ import Features from '~/components/widgets/Features.astro';
 import FeaturedText from '~/components/widgets/FeaturedText.astro';
 import Steps2 from '~/components/widgets/Steps2.astro';
 
+import { getPermalink } from '~/utils/permalinks';
 import imgReference from '~/assets/images/fabrica.jpg';
 
 const metadata = {
@@ -44,7 +45,7 @@ const testimonials_list = site_content.testimonials.map((item) => {
         text: 'Nuestros servicios',
         href: '#servicios',
       },
-      { text: 'Nuestros equipo', href: '/quienes-somos' },
+      { text: 'Nuestros equipo', href: getPermalink('/quienes-somos') },
     ]}
   >
 <!--
