@@ -1,13 +1,5 @@
-import { getPermalink, getBlogPermalink, getAsset } from './utils/permalinks';
+import { getPermalink } from './utils/permalinks';
 import { site_content } from './content/constants';
-
-
-const contacts = {
-  'whatsapp': {
-    'number': '5491135866271',
-    'message': 'Hola, me interesa conocer más sobre los servicios de XDYNAMIS.'
-  }
-}
 
 export const headerData = {
   links: [
@@ -26,7 +18,7 @@ export const headerData = {
   ],
   actions: [{ text: 'Whatsapp', 
     icon: 'tabler:brand-whatsapp',
-    href: `https://wa.me/${contacts.whatsapp.number}?text=${encodeURIComponent(contacts.whatsapp.message)}`, target: '_blank' }],
+    href: `https://wa.me/${site_content.contact.whatsapp.number}?text=${encodeURIComponent(site_content.contact.whatsapp.message)}`, target: '_blank' }],
 };
 
 export const footerData = {
@@ -34,8 +26,14 @@ export const footerData = {
     {
       title: 'Empresa',
       links: [
-        { text: 'Quienes somos', href: '/quienes-somos' },
-        { text: 'Contacto', href: '/contacto' },
+        { 
+          text: 'Quienes somos', 
+          href: getPermalink('/quienes-somos')
+        },
+        {
+          text: 'Contacto', 
+          href: getPermalink('/contacto')
+        },
       ],
     },
     {
