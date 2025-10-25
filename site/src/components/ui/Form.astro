@@ -77,6 +77,7 @@ const { inputs, textarea, disclaimer, button = 'Contact us', description = '' } 
         data-lang="es"
         data-size="invisible"
         data-callback="actualSubmit"
+        data-sitekey="50b2fe65-b00b-4b9e-ad62-3ba471098be2"
         id="hcaptcha-container"
         />
     </div>
@@ -119,27 +120,27 @@ const { inputs, textarea, disclaimer, button = 'Contact us', description = '' } 
   }
 </style>
 
-<script is:inline src="https://web3forms.com/client/script.js" async defer></script>
-<script is:inline defer>
-  document.addEventListener("astro:page-load", () => {
-    formValidation();
-  });
+<script is:inline src="https://js.hcaptcha.com/1/api.js" async defer></script>
+<script is:inline>
+  const SITE_KEY = '50b2fe65-b00b-4b9e-ad62-3ba471098be2';
+  let submitting = false;
 
-  function executeCaptcha(event) {
-    event.preventDefault();
-    hcaptcha.execute();
-  }
-
-  function formValidation() {
+  function initForm() {
     const form = document.getElementById("myform");
-    if (!form) return;
+    if (!form || form.dataset.initialized === 'true') return;
     
-    const result = document.getElementById("result");
-    const disclaimerCheck = document.getElementById("disclaimer");
+    form.dataset.initialized = 'true';
+    
     form.addEventListener("submit", function (e) {
       e.preventDefault();
+      
+      if (submitting) return;
+      
+      const result = document.getElementById("result");
+      const disclaimerCheck = document.getElementById("disclaimer");
+      
       result.classList.remove("text-red-500");
-      result.classList.add("text-green-500");
+      result.innerHTML = "";
       form.classList.add("was-validated");
 
       if (!form.checkValidity()) {
@@ -154,15 +155,68 @@ const { inputs, textarea, disclaimer, button = 'Contact us', description = '' } 
         return;
       }
 
-      executeCaptcha(e);
+      // Recreate captcha fresh on EVERY submit
+      recreateAndExecuteCaptcha();
     });
   }
 
-  function actualSubmit() {
-    const form = document.getElementById("myform");
-    if (!form) return;
+  function recreateAndExecuteCaptcha() {
+    console.log('Recreating captcha widget');
+    
+    if (typeof hcaptcha === 'undefined') {
+      console.error('hCaptcha not loaded');
+      return;
+    }
+    
+    const container = document.getElementById('hcaptcha-container');
+    if (!container) return;
+    
+    // Completely clear and rebuild
+    container.innerHTML = '';
+    
+    try {
+      const widgetId = hcaptcha.render('hcaptcha-container', {
+        'sitekey': SITE_KEY,
+        'size': 'invisible',
+        'callback': handleCaptchaSuccess,
+        'lang': 'es'
+      });
+      
+      console.log('Widget created, executing...');
+      
+      // Execute immediately after creation
+      setTimeout(() => {
+        hcaptcha.execute(widgetId);
+      }, 100);
+      
+    } catch (error) {
+      console.error('Error with captcha:', error);
+    }
+  }
 
+  function handleCaptchaSuccess(token) {
+    console.log('Captcha success');
+    submitForm(token);
+  }
+
+  function handleCaptchaError(error) {
+    console.error('Captcha error:', error);
+    submitting = false;
+    const result = document.getElementById("result");
+    result.classList.add("text-red-500");
+    result.innerHTML = "Error con el captcha. Intente nuevamente.";
+  }
+
+  function submitForm(token) {
+    if (submitting) return;
+    submitting = true;
+    
+    const form = document.getElementById("myform");
+    const result = document.getElementById("result");
+    
     const formData = new FormData(form);
+    formData.append('h-captcha-response', token);
+    
     const object = Object.fromEntries(formData);
     const json = JSON.stringify(object);
 
@@ -187,17 +241,27 @@ const { inputs, textarea, disclaimer, button = 'Contact us', description = '' } 
       })
       .catch((error) => {
         console.log(error);
+        result.classList.add("text-red-500");
         result.innerHTML = "Hubo un error.";
       })
       .then(function () {
+        submitting = false;
         form.reset();
         form.classList.remove("was-validated");
+        
         setTimeout(() => {
-          result.classList.remove("text-red-500");
-          result.classList.remove("text-green-500");
+          result.classList.remove("text-red-500", "text-green-500");
           result.innerHTML = "";
         }, 5000);
       });
   }
 
+  // Make functions global for hCaptcha callbacks
+  window.handleCaptchaSuccess = handleCaptchaSuccess;
+  window.handleCaptchaError = handleCaptchaError;
+
+  document.addEventListener("astro:page-load", () => {
+    console.log('Initializing form');
+    initForm();
+  });
 </script>
