@@ -192,9 +192,9 @@ const { inputs, textarea, disclaimer, button = 'Contact us', description = '' } 
     }
   }
 
-  function handleCaptchaSuccess() {
+  function handleCaptchaSuccess(token) {
     console.debug('Captcha success');
-    submitForm();
+    submitForm(token);
   }
 
   function handleCaptchaError(error) {
@@ -205,7 +205,7 @@ const { inputs, textarea, disclaimer, button = 'Contact us', description = '' } 
     result.innerHTML = "Error con el captcha. Intente nuevamente.";
   }
 
-  function submitForm() {
+  function submitForm(token) {
     if (submitting) return;
     submitting = true;
     
@@ -213,7 +213,10 @@ const { inputs, textarea, disclaimer, button = 'Contact us', description = '' } 
     const result = document.getElementById("result");
     
     const formData = new FormData(form);
+    formData.delete('g-recaptcha-response');
+    formData.set('h-captcha-response', token);
     const object = Object.fromEntries(formData);
+    delete object['g-recaptcha-response'];
     const json = JSON.stringify(object);
 
     result.innerHTML = "Enviando...";
