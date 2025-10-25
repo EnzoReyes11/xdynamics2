@@ -71,11 +71,14 @@ const { inputs, textarea, disclaimer, button = 'Contact us', description = '' } 
     )
   }
 
-    <div class="h-captcha mt-10 w-full flex justify-center" 
-      data-captcha="true" 
-      data-lang="es"
-      data-size="normal"
-      />
+    <div id="hcaptcha-parent">
+      <div class="h-captcha hidden mt-10 w-full flex justify-center" 
+        data-captcha="true" 
+        data-lang="es"
+        data-size="normal"
+        id="hcaptcha-container"
+        />
+    </div>
   {
     button && (
       <div class="mt-10 grid">
@@ -117,78 +120,135 @@ const { inputs, textarea, disclaimer, button = 'Contact us', description = '' } 
 
 <script is:inline src="https://web3forms.com/client/script.js" async defer></script>
 <script is:inline>
-
   document.addEventListener("astro:page-load", () => {
   
-      const form = document.getElementById("myform");
-      const result = document.getElementById("result");
-      const disclaimerCheck = document.getElementById("disclaimer");
+    const form = document.getElementById("myform");
+    const result = document.getElementById("result");
+    const disclaimerCheck = document.getElementById("disclaimer");
+    const captchaParent = document.getElementById("hcaptcha-parent");
+    const captchaElement = document.getElementById("hcaptcha-container");
+    const captchaSitekey = captchaElement.dataset.sitekey;
 
-      form.addEventListener("submit", function (e) {
-        e.preventDefault();
-        result.classList.remove("text-red-500");
-        result.classList.add("text-green-500");
-        form.classList.add("was-validated");
 
-        if (!form.checkValidity()) {
-          form.querySelectorAll(":invalid")[0].focus();
-          return;
-        }
-
-        if (!disclaimerCheck.checked) {
-          disclaimerCheck.focus();
-          result.classList.add("text-red-500");
-          result.innerHTML = "Por favor, acepte los términos y condiciones.";
-          return;
-        }
-
-        const hCaptcha = form.querySelector('textarea[name=h-captcha-response]').value;
-
-        if (!hCaptcha) {
-          e.preventDefault();
-          result.classList.add("text-red-500");
-          result.innerHTML = "Por favor, complete el captcha";
-          return
-        }
-
-        const formData = new FormData(form);
-        const object = Object.fromEntries(formData);
-        const json = JSON.stringify(object);
-
-        result.innerHTML = "Enviando...";
-
-        fetch("https://api.web3forms.com/submit", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-          },
-          body: json,
-        })
-          .then(async (response) => {
-            if (response.status == 200) {
-              result.classList.add("text-green-500");
-              result.innerHTML = 'Mensaje enviado con éxito.';
-            } else {
-              result.classList.add("text-red-500");
-              result.innerHTML = 'Hubo un error al enviar el mensaje. Vuelva a intentar.';
-            }
-          })
-          .catch((error) => {
-            console.log(error);
-            result.innerHTML = "Hubo un error.";
-          })
-          .then(function () {
-            form.reset();
-            form.classList.remove("was-validated");
-            setTimeout(() => {
-              result.classList.remove("text-red-500");
-              result.classList.remove("text-green-500");
-              result.innerHTML = "";
-            }, 5000);
+    function setCaptchaTheme() {
+      if (!captchaElement) return;
+      
+      const isDark = document.documentElement.classList.contains('dark');
+      const newTheme = isDark ? 'dark' : 'light';
+      
+      while (captchaParent.firstChild) {
+        captchaParent.removeChild(captchaParent.firstChild);
+      }
+      
+      const newCaptcha = document.createElement('div');
+      newCaptcha.className = 'h-captcha mt-10 w-full flex justify-center';
+      captchaParent.appendChild(newCaptcha);
+      
+      // Render new captcha with current theme
+      if (typeof hcaptcha !== 'undefined') {
+        try {
+          currentWidgetId = hcaptcha.render(newCaptcha, {
+            sitekey: captchaSitekey,
+            theme: newTheme,
+            size: 'normal',
+            lang: 'es'
           });
+        } catch (e) {
+          console.error(e)
+        }
+      }
+
+    }
+
+    // Set theme immediately on page load
+    setCaptchaTheme();
+
+
+    // Watch for theme changes
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.attributeName === 'class') {
+          setCaptchaTheme();
+        }
       });
-    },
+    });
+
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['class']
+    });
+
+
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['class']
+    });
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      result.classList.remove("text-red-500");
+      result.classList.add("text-green-500");
+      form.classList.add("was-validated");
+
+      if (!form.checkValidity()) {
+        form.querySelectorAll(":invalid")[0].focus();
+        return;
+      }
+
+      if (!disclaimerCheck.checked) {
+        disclaimerCheck.focus();
+        result.classList.add("text-red-500");
+        result.innerHTML = "Por favor, acepte los términos y condiciones.";
+        return;
+      }
+
+      const hCaptcha = form.querySelector('textarea[name=h-captcha-response]').value;
+
+      if (!hCaptcha) {
+        e.preventDefault();
+        result.classList.add("text-red-500");
+        result.innerHTML = "Por favor, complete el captcha";
+        return
+      }
+
+      const formData = new FormData(form);
+      const object = Object.fromEntries(formData);
+      const json = JSON.stringify(object);
+
+      result.innerHTML = "Enviando...";
+
+      fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: json,
+      })
+        .then(async (response) => {
+          if (response.status == 200) {
+            result.classList.add("text-green-500");
+            result.innerHTML = 'Mensaje enviado con éxito.';
+          } else {
+            result.classList.add("text-red-500");
+            result.innerHTML = 'Hubo un error al enviar el mensaje. Vuelva a intentar.';
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+          result.innerHTML = "Hubo un error.";
+        })
+        .then(function () {
+          form.reset();
+          form.classList.remove("was-validated");
+          setTimeout(() => {
+            result.classList.remove("text-red-500");
+            result.classList.remove("text-green-500");
+            result.innerHTML = "";
+          }, 5000);
+        });
+      });
+    }, 
     { once: true },
   );
 </script>
