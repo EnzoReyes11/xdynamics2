@@ -129,6 +129,48 @@ const getI18N = (config: Config) => {
   return value as I18NConfig;
 };
 
+const getAppBlog = (config: Config) => {
+  const _default = {
+    isEnabled: false,
+    postsPerPage: 6,
+    relatedPostsCount: 4,
+    post: {
+      isEnabled: true,
+      permalink: '/blog/%slug%',
+      robots: {
+        index: true,
+        follow: true,
+      },
+    },
+    list: {
+      isEnabled: true,
+      pathname: 'blog',
+      robots: {
+        index: true,
+        follow: true,
+      },
+    },
+    category: {
+      isEnabled: true,
+      pathname: 'category',
+      robots: {
+        index: true,
+        follow: true,
+      },
+    },
+    tag: {
+      isEnabled: true,
+      pathname: 'tag',
+      robots: {
+        index: false,
+        follow: true,
+      },
+    },
+  };
+
+  return merge({}, _default, config?.apps?.blog ?? {}) as AppBlogConfig;
+};
+
 const getUI = (config: Config) => {
   const _default = {
     theme: 'system',
@@ -154,6 +196,7 @@ export default (config: Config) => ({
   SITE: getSite(config),
   I18N: getI18N(config),
   METADATA: getMetadata(config),
+  APP_BLOG: getAppBlog(config),
   UI: getUI(config),
   ANALYTICS: getAnalytics(config),
 });
