@@ -1,5 +1,5 @@
 site:
-  name: xdynamis
+  name: XDYNAMIS
   site: 'https://enzoreyes11.github.io'
   base: '/xdynamis2'
   trailingSlash: false
@@ -9,7 +9,7 @@ site:
 # Default SEO metadata
 metadata:
   title:
-    default: xdynamis
+    default: XDYNAMIS
     template: '%s — xdynamis'
   description: "Potencia ty PYME"
   robots:
@@ -18,7 +18,7 @@ metadata:
   openGraph:
     site_name: xdynamis
     images:
-      - url: '~/assets/images/default.png'
+      - url: '~/assets/images/xdynamis-logo-crop.png'
         width: 1200
         height: 628
     type: website
