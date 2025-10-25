@@ -71,8 +71,8 @@ const { inputs, textarea, disclaimer, button = 'Contact us', description = '' } 
     )
   }
 
-    <div id="hcaptcha-parent">
-      <div class="h-captcha hidden mt-10 w-full flex justify-center" 
+    <div id="hcaptcha-parent" class="hidden">
+      <div class="h-captcha mt-10 w-full flex justify-center" 
         data-captcha="true" 
         data-lang="es"
         data-size="normal"
@@ -119,19 +119,32 @@ const { inputs, textarea, disclaimer, button = 'Contact us', description = '' } 
 </style>
 
 <script is:inline src="https://web3forms.com/client/script.js" async defer></script>
-<script is:inline>
+<script is:inline defer>
   document.addEventListener("astro:page-load", () => {
-  
+    captchaLoad();
+    formValidation();
+  });
+
+
+  function captchaLoad() {
+    console.log('ENTRA')
+    
     const form = document.getElementById("myform");
-    const result = document.getElementById("result");
-    const disclaimerCheck = document.getElementById("disclaimer");
+    if (!form) return;
+
     const captchaParent = document.getElementById("hcaptcha-parent");
     const captchaElement = document.getElementById("hcaptcha-container");
-    const captchaSitekey = captchaElement.dataset.sitekey;
-
-
+    const captchaSitekey = localStorage.getItem('captchaSitekey') || captchaElement.dataset.sitekey;
+    
+    if (captchaSitekey) {
+      localStorage.setItem('captchaSitekey', captchaSitekey)
+    }
+  
+        captchaParent.classList.remove('hidden');
     function setCaptchaTheme() {
-      if (!captchaElement) return;
+      if (!captchaElement || !captchaSitekey) {
+        return;
+      }
       
       const isDark = document.documentElement.classList.contains('dark');
       const newTheme = isDark ? 'dark' : 'light';
@@ -157,33 +170,34 @@ const { inputs, textarea, disclaimer, button = 'Contact us', description = '' } 
           console.error(e)
         }
       }
-
+    
+    }
+    
+      // Set theme immediately on page load
+     setCaptchaTheme();
+    
+      // Watch for theme changes
+      const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+          if (mutation.attributeName === 'class') {
+            setCaptchaTheme();
+          }
+        });
+      });
+    
+      observer.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['class']
+      });
+    
     }
 
-    // Set theme immediately on page load
-    setCaptchaTheme();
-
-
-    // Watch for theme changes
-    const observer = new MutationObserver((mutations) => {
-      mutations.forEach((mutation) => {
-        if (mutation.attributeName === 'class') {
-          setCaptchaTheme();
-        }
-      });
-    });
-
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ['class']
-    });
-
-
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ['class']
-    });
-
+  function formValidation() {
+    const form = document.getElementById("myform");
+    if (!form) return;
+    
+    const result = document.getElementById("result");
+    const disclaimerCheck = document.getElementById("disclaimer");
     form.addEventListener("submit", function (e) {
       e.preventDefault();
       result.classList.remove("text-red-500");
@@ -248,7 +262,6 @@ const { inputs, textarea, disclaimer, button = 'Contact us', description = '' } 
           }, 5000);
         });
       });
-    }, 
-    { once: true },
-  );
+    }
+
 </script>
