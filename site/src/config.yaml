@@ -1,8 +1,8 @@
 site:
   name: XDYNAMIS®
   #site: 'https://enzoreyes11.github.io'
-  site: 'http://locahost:4321'
-  base: '/'
+  #site: 'http://locahost:4321'
+  base: '/xdynamis2'
   trailingSlash: false
 
   #googleSiteVerificationId: orcPxI47GSa-cRvY11tUe6iGg2IO_RPvnA1q95iEM3M
