@@ -23,8 +23,8 @@ const whenExternalScripts = (items: (() => AstroIntegration) | (() => AstroInteg
 
 export default defineConfig({
   output: 'static',
-  site: 'https://enzoreyes11.github.io',
-  base: '/xdynamis2',
+//  site: 'https://enzoreyes11.github.io',
+//  base: '/xdynamis2',
 
   integrations: [
     tailwind({
