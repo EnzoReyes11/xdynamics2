@@ -36,13 +36,6 @@ export const footerData = {
         },
       ],
     },
-    {
-      title: 'Términos',
-      links: [
-        { text: 'Términos y condiciones', href: getPermalink('/terminos')},
-        { text: 'Politica de Privacidad', href: getPermalink('/privacidad') },
-      ],
-    },
   ],
   secondaryLinks: [],
   socialLinks: [

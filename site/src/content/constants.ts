@@ -1,8 +1,9 @@
 import main_logo from "~/assets/images/xdynamis-logo-crop.png";
 import hero_image from "~/assets/images/fabrica.jpg";
+import { SITE } from 'astrowind:config';
 
 export const site_content = {
-  name: "XDYNAMIS",
+  name: SITE.name,
   tagline: "POTENCIA TU PYME",
   description: "Potencia tu PYME con capacitaciones y consultorías empresariales",
   logo: {...main_logo, alt: "XDYNAMIS Logo"},
