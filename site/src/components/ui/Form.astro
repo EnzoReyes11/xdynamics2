@@ -1,12 +1,13 @@
 ---
 import type { Form as Props } from '~/types';
 import Button from '~/components/ui/Button.astro';
+import { SITE } from 'astrowind:config';
 
 const { inputs, textarea, disclaimer, button = 'Contact us', description = '' } = Astro.props;
 ---
 
 <form id="myform" method="post">
-  <input type="hidden" name="access_key" value="71914e1d-4816-402f-a291-891b369cac0f">
+  <input type="hidden" name="access_key" value={SITE.contactForm.web3forms}>
   <input type="hidden" name="subject" value="[XDYNAMIS] Nuevo mensaje de contacto">
   <input type="hidden" name="from_name" value="XDYNAMIS.com.ar">
   {
